@@ -3,6 +3,7 @@ package goodman.james.powertothepeople;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,13 +45,13 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+//    /**
+//     * A dummy authentication store containing known user names and passwords.
+//     * TODO: remove after connecting to a real authentication system.
+//     */
+//    private static final String[] DUMMY_CREDENTIALS = new String[]{
+//            "foo@example.com:hello", "bar@example.com:world"
+//    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -58,6 +60,8 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText confirmPassword = (EditText) findViewById(R.id.passwordConfirm);
+    private EditText bizUsername = (EditText) findViewById(R.id.bizUsername);
     private View mProgressView;
     private View mLoginFormView;
 
@@ -66,9 +70,15 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biz_sign_up);
         setupActionBar();
+        Intent intent = getIntent();
+        String text = intent.getStringExtra("email");
+
         // Set up the login form.
+        //***************
+        //collect the email address that was not found in the previous screen and load it into the text field.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        mEmailView.setText(text);
+        //**************
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -176,6 +186,13 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
             cancel = true;
         }
 
+        //check if passwords match
+        if(mPasswordView.getText().toString() != confirmPassword.getText().toString()){
+            mPasswordView.setError("These passwords don't match");
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -199,6 +216,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
             mAuthTask.execute((Void) null);
         }
     }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -255,7 +273,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
                 // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                                                                     .CONTENT_ITEM_TYPE},
+                .CONTENT_ITEM_TYPE},
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
@@ -279,6 +297,16 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
 
     }
 
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(BizSignUpActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);
+    }
+
+
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -287,16 +315,6 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
-
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(BizSignUpActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
     }
 
     /**
@@ -324,13 +342,13 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+            //}
 
             // TODO: register the new account here.
             return true;
