@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +61,8 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private EditText confirmPassword = (EditText) findViewById(R.id.passwordConfirm);
-    private EditText bizUsername = (EditText) findViewById(R.id.bizUsername);
+    private EditText confirmPassword;
+    private EditText bizUsername; //= (EditText) findViewById(R.id.bizUsername)
     private View mProgressView;
     private View mLoginFormView;
 
@@ -79,6 +80,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText(text);
         //**************
+        bizUsername = (EditText) findViewById(R.id.bizUsername);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -175,9 +177,20 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        EditText confirmPass = (EditText) findViewById(R.id.passwordConfirm);
+        String confirmPwd = confirmPass.getText().toString();
+        String bizUsr = bizUsername.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
+
+        //check to make sure business username is not null - should I do some error checking here too?
+        if (TextUtils.isEmpty(bizUsr)) {
+            bizUsername.setError("This field must not be empty");
+            focusView = bizUsername;
+            cancel = true;
+        }
+
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -187,7 +200,9 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         }
 
         //check if passwords match
-        if(mPasswordView.getText().toString() != confirmPassword.getText().toString()){
+        if(!password.equals(confirmPwd)){
+//            System.out.println(password + " password is wwwwww");
+//            System.out.println(confirmPwd + " ****password is confirm pwd one");
             mPasswordView.setError("These passwords don't match");
             focusView = mPasswordView;
             cancel = true;
@@ -334,6 +349,15 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            //get the connection to the database
+            SQLConnection sqlConnection = new SQLConnection();
+            //save the connection object
+            Connection connection;
+            connection = sqlConnection.run();
+
+
+            //enter the customer in the database
+
 
             try {
                 // Simulate network access.
