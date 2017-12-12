@@ -321,9 +321,6 @@ public class BizLoginActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            SQLConnection s = new SQLConnection();
-            s.run();
-
             //check email is in database?
             boolean emailOrNoEmail = false;
 

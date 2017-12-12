@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,6 +167,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        System.out.println("in atemptLogin *(**((**(");
         if (mAuthTask != null) {
             return;
         }
@@ -180,6 +182,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
         EditText confirmPass = (EditText) findViewById(R.id.passwordConfirm);
         String confirmPwd = confirmPass.getText().toString();
         String bizUsr = bizUsername.getText().toString();
+
 
         boolean cancel = false;
         View focusView = null;
@@ -227,7 +230,7 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, bizUsr);
             mAuthTask.execute((Void) null);
         }
     }
@@ -338,32 +341,46 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+
+
         private final String mEmail;
         private final String mPassword;
+        String bizName;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, String bus) {
+
             mEmail = email;
             mPassword = password;
+            bizName = bus;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            //get the connection to the database
-            SQLConnection sqlConnection = new SQLConnection();
-            //save the connection object
-            Connection connection;
-            connection = sqlConnection.run();
 
+            System.out.println("&*&*&*&*&  at the top of inside trying to insert "+ bizName);
+
+            BizSignUpDAO bizSignUpDAO = new BizSignUpDAO(mEmail,bizName,mPassword);
 
             //enter the customer in the database
+            JavaDBDao javaDBDao = new JavaDBDao();
+
+//            try {
+//
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
 
 
             try {
                 // Simulate network access.
+                System.out.println("&*&*&*&*&  inside trying to insert ");
+                javaDBDao.insertObjectIntoDatabase(bizSignUpDAO);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
 
 //            for (String credential : DUMMY_CREDENTIALS) {
