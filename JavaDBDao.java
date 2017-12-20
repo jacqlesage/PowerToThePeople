@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jamesgoodman on 28/11/17.
@@ -39,7 +42,12 @@ public class JavaDBDao {
 
    public void insertObjectIntoDatabase(BizSignUpDAO bizSignUpDAO) throws SQLException{
 
-       java.sql.Date currentTimestamp = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+//
+//       java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+//       java.sql.Time time = new java.sql.Time(Calendar.getInstance().getTime().getTime());
+       Calendar calendar = Calendar.getInstance();
+       java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
+
        //get a connection
        Connection conn;
        SQLConnection sqlConnection = new SQLConnection();
@@ -48,6 +56,8 @@ public class JavaDBDao {
        System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.bizUsername);
        System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.email);
        System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.password);
+       System.out.println("what is time and date @@@@"+ ourJavaTimestampObject.toString());
+
 
        if(conn != null){
 
@@ -58,7 +68,7 @@ public class JavaDBDao {
            preparedStmt.setString (1,bizSignUpDAO.bizUsername );
            preparedStmt.setString (2, bizSignUpDAO.email);
            preparedStmt.setString  (3, bizSignUpDAO.password);
-           preparedStmt.setDate  (4,  currentTimestamp);
+           preparedStmt.setTimestamp  (4, ourJavaTimestampObject,calendar);
 
 
            // execute the preparedstatement
