@@ -3,6 +3,7 @@ package goodman.james.powertothepeople;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -357,6 +358,17 @@ public class CusLoginActivity extends AppCompatActivity implements LoaderCallbac
             mAuthTask = null;
             showProgress(false);
         }
+
+        private void changeToCusSignUpView(String email) {
+            System.out.println(email + " ****@**@#@(");
+            //else we divert them to signing up page for business
+           Intent intent = new Intent(CusLoginActivity.this, CustomerSignUpActivity.class);
+//        startActivity(intent);
+            intent.putExtra("email",email);
+//        intent.putExtra("some_other_key", "a value");
+            startActivity(intent);
+        }
+
     }
 }
 
