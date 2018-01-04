@@ -19,7 +19,7 @@ public class JavaDBDao {
 
 
 
-    public Boolean checkEmailInDB(String email) throws SQLException {
+    public Boolean checkBizEmailInDB(String email) throws SQLException {
         Connection conn;
         SQLConnection sqlConnection = new SQLConnection();
         conn = sqlConnection.run();
@@ -40,6 +40,27 @@ public class JavaDBDao {
         return false;
     }
 
+    public Boolean checkCusEmailInDB(String email) throws SQLException {
+        Connection conn;
+        SQLConnection sqlConnection = new SQLConnection();
+        conn = sqlConnection.run();
+
+        final String queryCheck = "SELECT count(*)from signUpTableCus WHERE email = ?";
+        final PreparedStatement ps = conn.prepareStatement(queryCheck);
+        ps.setString(1,email);
+        final ResultSet resultSet = ps.executeQuery();
+        if(resultSet == null) {
+            
+            //something there,already registered so look to sign them in
+            conn.close();
+            return true;
+
+        }
+        conn.close();
+        return false;
+    }
+
+
    public void insertObjectIntoDatabase(BizSignUpDAO bizSignUpDAO) throws SQLException{
 
 //
@@ -53,13 +74,7 @@ public class JavaDBDao {
        SQLConnection sqlConnection = new SQLConnection();
        conn = sqlConnection.run();
 
-       System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.bizUsername);
-       System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.email);
-       System.out.println("what is in the result set bizUsername"+ bizSignUpDAO.password);
-       System.out.println("what is time and date @@@@"+ ourJavaTimestampObject.toString());
-
-
-       if(conn != null){
+         if(conn != null){
 
          String query = "INSERT INTO signUpTableBiz (bizUsername, email, password,create_time )"
                  + "values (?,?,?,?)";
