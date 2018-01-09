@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -327,7 +326,7 @@ public class BizLoginActivity extends AppCompatActivity implements LoaderCallbac
             JavaDBDao javaDBDao = new JavaDBDao();
 
             try {
-               emailOrNoEmail = javaDBDao.checkEmailInDB(mEmail);
+               emailOrNoEmail = javaDBDao.checkBizEmailInDB(mEmail);
             } catch (SQLException e) {
                 e.printStackTrace();
 

@@ -50,7 +50,7 @@ public class JavaDBDao {
         ps.setString(1,email);
         final ResultSet resultSet = ps.executeQuery();
         if(resultSet == null) {
-            
+
             //something there,already registered so look to sign them in
             conn.close();
             return true;

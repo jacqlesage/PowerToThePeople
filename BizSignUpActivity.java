@@ -232,6 +232,8 @@ public class BizSignUpActivity extends AppCompatActivity implements LoaderCallba
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password, bizUsr);
             mAuthTask.execute((Void) null);
+            //else biz has been entered into the DB and then we need to move onto the check out listings page
+            //at this stage it has not been setup - first create personal customer login and then comment out the above line.
         }
     }
 
